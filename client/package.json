@@ -1,11 +1,20 @@
 {
   "scripts": {
-    "test": "ts-node src/main.ts"
+    "accounts": "ts-node src/accounts.ts",
+    "test": "ts-node src/main.ts",
+    "send-sol": "ts-node src/send-sol.ts",
+    "spl-token-mint": "ts-node src/spl-token-mint.ts",
+    "wallets": "ts-node src/wallets.ts"
   },
   "dependencies": {
+    "@solana/spl-token": "^0.2.0",
     "@solana/web3.js": "^1.50.1",
+    "bip39": "^3.0.4",
     "borsh": "^0.7.0",
+    "bs58": "^5.0.0",
     "mz": "^2.7.0",
+    "tweetnacl": "^1.0.3",
+    "tweetnacl-util": "^0.15.1",
     "yaml": "^2.1.1"
   },
   "devDependencies": {

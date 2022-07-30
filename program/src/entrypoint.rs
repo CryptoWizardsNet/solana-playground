@@ -37,7 +37,7 @@ mod test {
     // Account
     let key = Pubkey::default();
     let owner = Pubkey::default();
-    let mut lamports: u64 = 0;
+    let mut lamports: u64 = 30_000_000;
     let space = mem::size_of::<u8>();
     let mut data = vec![0; space];
     let account = AccountInfo::new(
@@ -51,8 +51,23 @@ mod test {
       Epoch::default(), // epoch next owing rent
     );
 
+    // Account 2
+    let mut lamports_2: u64 = 0;
+    let space_2 = mem::size_of::<u8>();
+    let mut data_2 = vec![0; space_2];
+    let account_2 = AccountInfo::new(
+      &key, // Public key of account
+      true, // is_signer
+      true, // is_writable
+      &mut lamports_2, // lamports
+      &mut data_2, // data
+      &owner, // Program owner
+      false, // executable
+      Epoch::default(), // epoch next owing rent
+    );
+
     // Add to Accounts Vector
-    let accounts = vec![account];
+    let accounts = vec![account, account_2];
 
     // Build Instruction
     let ix_struct = SomeDataStruct1 {
@@ -64,9 +79,10 @@ mod test {
 
     // Initialize instruction data with Routing
     let mut instruction_data: Vec<u8> = Vec::new();
-    instruction_data.push(u8::to_le_bytes(0)[0]); // 0 for Make, 1 for Take
+    // 2 = Transfer Lamports (append will be ignored after this line)
+    instruction_data.push(u8::to_le_bytes(2)[0]); 
 
-    // Add Maker Instruction to Instruction Data
+    // Add IX_Struct Instruction to Instruction Data
     instruction_data.append(&mut instruction);
 
     // Send Request

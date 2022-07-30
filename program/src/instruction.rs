@@ -17,6 +17,7 @@ pub struct SomeDataStruct2 {
 pub enum Instruction {
   Instruction1(SomeDataStruct1),
   Instruction2(SomeDataStruct2),
+  TransferLamports,
 }
 
 // Function to unpack instruction
@@ -32,6 +33,7 @@ impl Instruction {
     Ok(match tag {
       0 => Self::Instruction1(SomeDataStruct1::try_from_slice(&rest)?),
       1 => Self::Instruction2(SomeDataStruct2::try_from_slice(&rest)?),
+      2 => Self::TransferLamports,
       _ => return Err(ProgramError::InvalidInstructionData.into()),
     })
   }

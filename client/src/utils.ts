@@ -47,6 +47,7 @@ export async function getPayer(): Promise<Keypair> {
   try {
     const config = await getConfig();
     if (!config.keypair_path) throw new Error('Missing keypair path');
+    console.log(config.keypair_path);
     return await createKeypairFromFile(config.keypair_path);
   } catch (err) {
     console.warn(

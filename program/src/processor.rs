@@ -39,6 +39,10 @@ impl Processor {
         msg!("Processing Instruction 2");
         Self::process_instruction_2(program_id, accounts, ix)
       },
+      Instruction::TransferLamports => {
+        msg!("Transferring Lamports");
+        Self::transfer_lamports(program_id, accounts)
+      }
     }
   }
 
@@ -79,6 +83,37 @@ impl Processor {
     ix: SomeDataStruct2,
   ) -> ProgramResult {
     msg!("Complete: Processed instruction 2. Nothing happening here.");
+    Ok(())
+  }
+
+  // Route: Transfer Lamports
+  fn transfer_lamports(
+    program_id: &Pubkey,
+    accounts: &[AccountInfo],
+  ) -> ProgramResult {
+
+    // Create Iterator
+    let account_info_iter = &mut accounts.iter();
+
+    // Account 1 Info
+    let account_1 = next_account_info(account_info_iter)?;
+
+    // Account 2 Info
+    let account_2 = next_account_info(account_info_iter)?;
+
+    // Determine fee - 5 Lamports
+    let my_fee = 500000000u64;
+
+    // Ensure enough balance
+    if **account_2.try_borrow_lamports()? < my_fee {
+      return Err(ProgramError::Custom(5));
+    }
+
+    // Debit from_account and credit to_account
+    **account_2.try_borrow_mut_lamports()? -= my_fee;
+    **account_1.try_borrow_mut_lamports()? += my_fee;
+
+    // Return
     Ok(())
   }
 }
